@@ -3,6 +3,8 @@
 ############################
 # Directory for sample files
 example_files/
+# Logs directory
+logs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
