@@ -5,6 +5,8 @@
 example_files/
 # Logs directory
 logs/
+# Directory for storing the database
+DataBase/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
