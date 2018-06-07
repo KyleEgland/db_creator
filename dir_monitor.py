@@ -1,10 +1,9 @@
 #! python3
 # This program will monitor a specified directory for changes.
 import os
-import datetime
-import getpass
 import re
 import logging
+import sys
 
 
 ##########
@@ -27,97 +26,77 @@ file_handler.setLevel(logging.DEBUG)
 
 # Add the file handler to the logger
 logger.addHandler(file_handler)
-
-######################
-# Global Variable(s) #
-######################
-user_name = getpass.getuser()
-path_to_watch = 'C:\\Users\\{}\\Documents\\test_dir'.format(user_name)
-dump_path = 'C:\\Users\\{}\\Documents\\test_dir\\misc'.format(user_name)
-logger.debug('Watching {}'.format(path_to_watch))
-
-# Regular expression for checking file name validity on first pass
-initial_check = re.compile(r'BOOMS|LIGHTS|ORIS|MB51')
+# --------------------------------------------------------------------------- #
+#                                END SECTION                                  #
+# --------------------------------------------------------------------------- #
 
 
-# Loop through items in directory, ignoring other directories
-def ListDir(path):
+#############
+# Functions #
+#############
+# Return a list of a directory contents (including sub-directory names) to the
+# caller.
+def list_dir(path):
+    try:
+        # Instantiate a list to contain the new values for file names.
+        dir_list = os.listdir(path)
 
-    # Instantiate a list to contain the new values for file names
-    dir_list = []
-
-    # Loop through the names in the specified directory
-    for fname in os.listdir(path):
-        # Create an absolute path for the given name
-        check = os.path.join(path, fname)
-        # Check the absolute path to see if the given name is a directory
-        if os.path.isdir(check):
-            # If the name is a directory, skip it
-            continue
-        else:
-            # If the name is a file, add it to the list
-            dir_list.append(fname)
-
-    return dir_list
+        # Send the list back to the caller
+        return dir_list
+    except Exception as e:
+        logger.critical('ERROR func "list_dir": {}'.format(e))
+        sys.exit(0)
 
 
-# Get the contents of the globally specified directory
-def defineList():
-    # Use the path variable
-    global path_to_watch
-    global dump_path
+# Add full path to a file name to create an absolute path
+def add_path(contents_list):
+    # Create a list using list comprehension that will intake a list of names,
+    # file or directory, and append it to the full path
+    response_list = list(map(lambda x: os.path.abspath(x), contents_list))
 
+    # Return the newly created list to the caller
+    return response_list
+
+
+# Remove directories from the input list in order to return a list of only
+# files
+def filter_dir(full_dir_list):
+    # Use list comprehension to create a list from an input list by filtering
+    # out the directories.
+    response_list = list(filter(lambda x: os.path.isfile(x), full_dir_list))
+    return response_list
+
+
+# Filter out files from the directory filtered list that should not be used
+def filter_files(file_list):
+    # Regular expression for checking file name validity on first pass
+    initial_check = re.compile(r'BOOMS|LIGHTS|ORIS|MB51')
+    filtered_files = list(filter(lambda x: initial_check.search(x)))
+
+    return filtered_files
+
+
+# Remove the full path from a list containing files with absolute paths in
+# order to return a list of file names only.
+def remove_dir(dir_list):
+    response_list = list(map(lambda x: os.path.basename(x), dir_list))
+
+    return response_list
+
+
+# Consolidation of add_path, filter_dir, and list_dir
+def defineList(path):
     # Create a list of the file contents of the directory
-    dir_files = ListDir(path_to_watch)
-    # Create string of list for log entry
-    log_str = ', '.join(dir_files)
-    logger.info('Found {} files: {}'.format(len(dir_files), log_str))
+    dir_files = list_dir(path)
 
-    # Itterate over a copy of the list, "list(dir_files", remove unwanted files
-    # from the dir and remove from list.
-    for item in list(dir_files):
-        search_name = initial_check.search(item)
+    # Add the full path to each item in the list
+    full_dir = add_path(dir_files)
 
-        if search_name is not None:
-            logger.info('{} is valid'.format(item))
-        elif search_name is None:
-            logger.info('{} is NOT valid'.format(item))
-            # Create an absolute path of where the "bad" file is
-            abs_path = os.path.join(path_to_watch, item)
-            # Create an absolute path to move the "bad" file to
-            new_path = os.path.join(dump_path, item)
-            # Move the "bad" file
-            os.rename(abs_path, new_path)
-            dir_files.remove(item)
+    # Filter the directories out of the list
+    filtered_dir = filter_dir(full_dir)
 
-    return dir_files
+    return filtered_dir
 
 
-# Loop through the list of files and add them to the dictionary
-def prepDict(file_list):
-    # Instantiate a dictionary to hold the key/value pairs created
-    tmp_dict = {}
-
-    # Get the current date and time
-    currentTime = datetime.datetime.now()
-    # Format the current date and time for use as a value in dict
-    formattedTime = currentTime.strftime('%d-%b-%Y')
-
-    # TODO:  Add in steps to handle a check against the database to ensure
-    #        files aren't added more than once
-
-    # Loop through the list to add file names and dates/times to dictionary
-    for item in file_list:
-        tmp_dict[item] = formattedTime
-        print('Added file: {}'.format(item))
-
-
-# Loop the program to keep polling the specified directory
-# while True:
-#
-#     defineList()
-#
-#     time.sleep(10)
 if __name__ == '__main__':
     raw_info = defineList()
-    prepDict(raw_info)
