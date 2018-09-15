@@ -94,8 +94,8 @@ class MyApp(tk.Tk):
 
         # Add the pages to the Notebook; this order determines appearnce on
         # the window - it can be specified explicitely as well
-        self.notebook.add(input_tab, text='Main')
-        self.notebook.add(config_tab, text='Text Entry')
+        self.notebook.add(input_tab, text='Import Data')
+        self.notebook.add(config_tab, text='Parser Config')
         self.notebook.add(graph_tab, text='Just Buttons')
 
         # Top menu bar (e.g. File, Edit, etc.)
