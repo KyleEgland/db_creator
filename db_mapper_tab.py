@@ -8,7 +8,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 
 
-class GraphTab(tk.Frame):
+class MapperTab(tk.Frame):
     # Initialization function
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)

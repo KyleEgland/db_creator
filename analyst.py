@@ -15,8 +15,8 @@ import sys
 # "Local" imports - files that were created and should be placed in the same
 # directory as this file.
 from input_tab import InputTab
-from config_tab import ConfigTab
-from graph_tab import GraphTab
+from db_mapper_tab import MapperTab
+from parser_tab import ParserTab
 
 
 # ------------ #
@@ -89,14 +89,14 @@ class MyApp(tk.Tk):
         # Instantiate Notebook pages, note that the order here determines load
         # order - this can be important depending on desired effect(s)
         input_tab = InputTab(self.notebook)
-        config_tab = ConfigTab(self.notebook)
-        graph_tab = GraphTab(self.notebook)
+        mapper_tab = MapperTab(self.notebook)
+        parser_tab = ParserTab(self.notebook)
 
         # Add the pages to the Notebook; this order determines appearnce on
         # the window - it can be specified explicitely as well
         self.notebook.add(input_tab, text='Import Data')
-        self.notebook.add(config_tab, text='Parser Config')
-        self.notebook.add(graph_tab, text='Just Buttons')
+        self.notebook.add(mapper_tab, text='DB Mapper Config')
+        self.notebook.add(parser_tab, text='Parser Config')
 
         # Top menu bar (e.g. File, Edit, etc.)
         # Menu bar will be visible across all tabs as when it is placed here
