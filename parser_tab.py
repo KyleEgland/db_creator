@@ -13,8 +13,8 @@ class ParserTab(tk.Frame):
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
         # The "rowconfigure" and "columnconfigure"
-        tk.Grid.rowconfigure(self, 0, weight=1)
-        tk.Grid.rowconfigure(self, 1, weight=1)
+        tk.Grid.rowconfigure(self, 0, weight=0)
+        tk.Grid.rowconfigure(self, 1, weight=0)
         tk.Grid.rowconfigure(self, 2, weight=1)
 
         tk.Grid.columnconfigure(self, 0, weight=1)
@@ -40,11 +40,11 @@ class ParserTab(tk.Frame):
         self.add_grp_lbl.grid(row=1, column=0, sticky='sne', padx=5, pady=5)
 
         self.add_group_entry = tk.Entry(self)
-        self.add_group_entry.grid(row=1, column=1, sticky='nsew', padx=5,
+        self.add_group_entry.grid(row=1, column=1, sticky='ew', padx=5,
                                   pady=5)
 
         self.add_group_btn = ttk.Button(self, text='+')
-        self.add_group_btn.grid(row=1, column=2, sticky='nsw', padx=5, pady=5)
+        self.add_group_btn.grid(row=1, column=2, padx=5, pady=5)
 
         # ------------------------- #
         # ROW 2 - Edit Associations #
