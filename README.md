@@ -3,3 +3,6 @@ Monitor a directory for specific files, add contents to database, log and remove
 
 ## Dependencies
 Python 3
+
+## How to
+Run analyst.py to use.
