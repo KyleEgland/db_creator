@@ -53,7 +53,7 @@ class ParserTab(tk.Frame):
         self.assoc_frame.grid(row=2, column=0, columnspan=3, sticky='nsew',
                               padx=3, pady=3)
 
-        tk.Grid.rowconfigure(self.assoc_frame, 0, weight=1)
+        tk.Grid.rowconfigure(self.assoc_frame, 0, weight=0)
         tk.Grid.rowconfigure(self.assoc_frame, 1, weight=1)
 
         tk.Grid.columnconfigure(self.assoc_frame, 0, weight=1)
@@ -61,7 +61,7 @@ class ParserTab(tk.Frame):
         tk.Grid.columnconfigure(self.assoc_frame, 2, weight=1)
 
         # Groups Widgets
-        self.groups_lbl = tk.Label(self.assoc_frame, text='Groups:')
+        self.groups_lbl = tk.Label(self.assoc_frame, text='Groups')
         self.groups_lbl.grid(row=0, column=0, sticky='sew', padx=3, pady=3)
 
         self.groups_var = tk.StringVar()
