@@ -16,7 +16,6 @@ class InputTab(tk.Frame):
         tk.Grid.rowconfigure(self, 0, weight=0)
         tk.Grid.rowconfigure(self, 1, weight=0)
         tk.Grid.rowconfigure(self, 2, weight=0)
-        tk.Grid.rowconfigure(self, 3, weight=0)
 
         tk.Grid.columnconfigure(self, 0, weight=1)
         tk.Grid.columnconfigure(self, 1, weight=1)
@@ -45,27 +44,33 @@ class InputTab(tk.Frame):
         self.db_status_out = tk.Label(self, textvariable=self.db_status_var)
         self.db_status_out.grid(row=1, column=1, sticky='nes', padx=5, pady=5)
 
-        # --------------------------- #
-        # Row 2 - Sample Output Frame #
-        # --------------------------- #
-        self.output_frame = ttk.Labelframe(self, text='Sample Output Data')
-        self.output_frame.grid(row=2, column=0, columnspan=3)
+        # ---------------------------- #
+        # Row 2 - Output Pruning Frame #
+        # ---------------------------- #
+        self.output_frame = ttk.Labelframe(self, text='Output Data')
+        self.output_frame.grid(row=2, column=0, columnspan=3, sticky='nsew',
+                               padx=3, pady=3)
 
         tk.Grid.rowconfigure(self.output_frame, 0, weight=0)
-        tk.Grid.rowconfigure(self.output_frame, 1, weight=0)
+        tk.Grid.rowconfigure(self.output_frame, 1, weight=1)
+        tk.Grid.rowconfigure(self.output_frame, 2, weight=0)
+        tk.Grid.rowconfigure(self.output_frame, 3, weight=0)
+        tk.Grid.rowconfigure(self.output_frame, 4, weight=0)
 
         tk.Grid.columnconfigure(self.output_frame, 0, weight=1)
         tk.Grid.columnconfigure(self.output_frame, 1, weight=1)
 
+        # Column Select
         self.col_avail_lbl = tk.Label(self.output_frame,
                                       text='Columns Available')
         self.col_avail_lbl.grid(row=0, column=0, sticky='esw', padx=3, pady=3)
 
-        self.hdr_slct_var = tk.StringVar()
-        self.hdr_slct_box = tk.Listbox(self.output_frame,
-                                       listvariable=self.hdr_slct_var)
-        self.hdr_slct_box.grid(row=1, column=0, sticky='nsew', padx=5, pady=5)
+        self.col_slct_var = tk.StringVar()
+        self.col_slct_box = tk.Listbox(self.output_frame,
+                                       listvariable=self.col_slct_var)
+        self.col_slct_box.grid(row=1, column=0, sticky='nsew', padx=5, pady=5)
 
+        # Output data
         self.col_data_lbl = tk.Label(self.output_frame,
                                      text='Sample Col. Data')
         self.col_data_lbl.grid(row=0, column=1, sticky='esw', padx=3, pady=3)
@@ -74,6 +79,31 @@ class InputTab(tk.Frame):
         self.col_data_out = tk.Listbox(self.output_frame,
                                        listvariable=self.col_data_var)
         self.col_data_out.grid(row=1, column=1, sticky='nsew', padx=3, pady=3)
+
+        # Viewing options
+        self.show_data_lbl = tk.Label(self.output_frame,
+                                      text='Show data from:')
+        self.show_data_lbl.grid(row=2, column=0, sticky='nes', padx=3, pady=3)
+
+        self.show_data_var = tk.StringVar()
+        self.show_data_bx = ttk.Combobox(self.output_frame,
+                                         textvariable=self.show_data_var)
+        self.show_data_bx.grid(row=2, column=1, sticky='ew', padx=3, pady=3)
+
+        self.num_show_lbl = tk.Label(self.output_frame, text='Number of rows:')
+        self.num_show_lbl.grid(row=3, column=0, sticky='nes', padx=3, pady=3)
+
+        self.num_show_entry = tk.Entry(self.output_frame)
+        self.num_show_entry.grid(row=3, column=1, sticky='w', padx=3, pady=3)
+
+        # Remove Selected
+        self.rmv_col_btn = ttk.Button(self.output_frame,
+                                      text='Remove selected column')
+        self.rmv_col_btn.grid(row=4, column=0, sticky='ew', padx=3, pady=3)
+
+        self.rmv_row_btn = ttk.Button(self.output_frame,
+                                      text='Remove selected row')
+        self.rmv_row_btn.grid(row=4, column=1, sticky='ew', padx=3, pady=3)
 
     def input_data(self):
         # Function to open file dialog to select input file
