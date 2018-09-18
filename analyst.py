@@ -12,8 +12,7 @@ import tkinter.ttk as ttk
 import logging
 import os
 import sys
-# "Local" imports - files that were created and should be placed in the same
-# directory as this file.
+# "Local" imports
 from input_tab import InputTab
 from db_mapper_tab import MapperTab
 from parser_tab import ParserTab
