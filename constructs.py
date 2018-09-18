@@ -3,12 +3,13 @@
 # by the analyst.py program
 
 
-class InputFile():
+class InpuData():
     def __init__(self, *args, **kwargs):
         self._file_name = ''
         self._file_dir = ''
         self._col_names = ''
         self._sample_data = ''
+        self._data_frame = ''
 
     def set_file_name(self, path):
         self._file_name = path
