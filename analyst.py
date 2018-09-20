@@ -16,6 +16,7 @@ import sys
 from input_tab import InputTab
 from db_mapper_tab import MapperTab
 from parser_tab import ParserTab
+import constructs as cts
 
 
 # ------------ #
@@ -85,9 +86,13 @@ class MyApp(tk.Tk):
         # Use pack geometry to fill window with the Notebook widget
         self.notebook.pack(fill='both', expand=True)
 
+        # Create the constructs that will pass data between all necessary parts
+        # of the program
+        self.info = cts.InputData()
+
         # Instantiate Notebook pages, note that the order here determines load
         # order - this can be important depending on desired effect(s)
-        input_tab = InputTab(self.notebook)
+        input_tab = InputTab(self.notebook, self.info)
         mapper_tab = MapperTab(self.notebook)
         parser_tab = ParserTab(self.notebook)
 
