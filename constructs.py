@@ -117,6 +117,16 @@ class InputData():
 
         self.update_subs(self._col_subs, self._col_names)
 
+    def set_sample_data(self, col, rows, direction):
+        if direction == 'Top':
+            self._sample_data = self._data_frame.iloc[0: int(rows),
+                                                      int(col)].values.tolist()
+        else:
+            self._sample_data = self._data_frame.iloc[(-1 * int(rows)):,
+                                                      int(col)].values.tolist()
+
+        self.update_subs(self._sample_subs, self._sample_data)
+
     def add_sub(self, sub, sub_list):
         self._subs_dict[sub_list].append(sub)
         logger.debug('Added "{}" to "{}" subscriber list'.format(sub,

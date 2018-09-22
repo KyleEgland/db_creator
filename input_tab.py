@@ -123,6 +123,9 @@ class InputTab(tk.Frame):
                                       text='Remove selected row')
         self.rmv_row_btn.grid(row=4, column=2, sticky='ew', padx=3, pady=3)
 
+    # ------------- #
+    # Tab Functions #
+    # ------------- #
     def input_data(self):
         # Function to open file dialog to select input file
         home = os.path.expanduser('~')
@@ -131,3 +134,13 @@ class InputTab(tk.Frame):
                                        filetype=(('CSV File', ('.csv')),
                                                  ('All Files', '*.*')))
         self.data_in.set_file_name(import_file)
+
+    def num_val(self):
+        checker = self.num_show_entry.get()
+        try:
+            int(checker)
+        except Exception as e:
+            tk.messagebox.ok(message='Please use digits in "Number of Rows".')
+
+    def get_sample(self):
+        pass
