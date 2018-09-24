@@ -85,6 +85,7 @@ class InputTab(tk.Frame):
                                        listvariable=self.col_slct_var,
                                        yscrollcommand=self.col_slct_scroll.set)
         self.col_slct_scroll.config(command=self.col_slct_box.yview)
+        self.col_slct_box.bind('<<ListboxSelect>>', self.get_sample)
         self.col_slct_scroll.grid(row=1, column=1, sticky='ns')
         self.col_slct_box.grid(row=1, column=0, sticky='nsew', pady=5)
 
@@ -103,9 +104,9 @@ class InputTab(tk.Frame):
                                       text='Show data from:')
         self.show_data_lbl.grid(row=2, column=0, sticky='nes', padx=3, pady=3)
 
-        self.show_data_var = tk.StringVar()
-        self.show_data_bx = ttk.Combobox(self.output_frame,
-                                         textvariable=self.show_data_var)
+        self.show_data_bx = ttk.Combobox(self.output_frame, justify='center',
+                                         state='readonly',
+                                         values=['Top', 'Bottom'])
         self.show_data_bx.grid(row=2, column=2, sticky='ew', padx=3, pady=3)
 
         self.num_show_lbl = tk.Label(self.output_frame, text='Number of rows:')
@@ -136,11 +137,18 @@ class InputTab(tk.Frame):
         self.data_in.set_file_name(import_file)
 
     def num_val(self):
-        checker = self.num_show_entry.get()
         try:
-            int(checker)
+            checker = int(self.num_show_entry.get())
         except Exception as e:
             tk.messagebox.ok(message='Please use digits in "Number of Rows".')
 
-    def get_sample(self):
-        pass
+        return checker
+
+    def get_sample(self, evt):
+        selection = evt.widget
+        rows = self.num_val()
+        col = selection.curselection()[0]
+        direction = self.show_data_bx.get()
+        if col is not None:
+            print('Number of rows: {}\nColumn: {}\nDirection: {}\
+              '.format(rows, col, direction))

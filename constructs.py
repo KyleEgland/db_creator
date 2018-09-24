@@ -87,7 +87,7 @@ class InputData():
         self._file_name = path
 
         # The newly set file is logged
-        logger.debug('New file name - {}'.format(self._file_name.name))
+        logger.debug('New file name - {}'.format(self._file_name))
 
         # The subscribers are updated
         self.update_subs(self._file_subs,
