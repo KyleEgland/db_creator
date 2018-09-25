@@ -102,29 +102,6 @@ class MyApp(tk.Tk):
         self.notebook.add(mapper_tab, text='DB Mapper Config')
         self.notebook.add(parser_tab, text='Parser Config')
 
-        # Top menu bar (e.g. File, Edit, etc.)
-        # Menu bar will be visible across all tabs as when it is placed here
-        # in the "Main window"
-        menu_bar = tk.Menu(self)
-
-        # Creating menus for the menu bar
-        # "file_menu" instantiates the variable that is to serve as the actual
-        # "File" menu.  Using "tearoff=0" prevents it from being moved -
-        # meaning clicked and dragged to somewhere else
-        file_menu = tk.Menu(menu_bar, tearoff=0)
-
-        # Creating commands to house inside menus of menu bar
-        file_menu.add_command(label='New Thing', accelerator='Ctrl+N')
-        file_menu.add_command(label='Load Thing', accelerator='Ctrl+L')
-        file_menu.add_command(label='Save Thing', accelerator='Ctrl+S')
-
-        # Adding menus to menu bar
-        # Add cascade to allow cascade effect over window.
-        # Cascade effect is the "normal" file menu effect
-        menu_bar.add_cascade(label='File', underline=0, menu=file_menu)
-        # Identify "menu_bar" as the menu for the application
-        self.config(menu=menu_bar)
-
 
 app = MyApp()
 app.mainloop()
