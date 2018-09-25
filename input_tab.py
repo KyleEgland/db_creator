@@ -73,13 +73,17 @@ class InputTab(tk.Frame):
         tk.Grid.columnconfigure(self.output_frame, 2, weight=1)
         tk.Grid.columnconfigure(self.output_frame, 3, weight=0)
 
-        # Column Select
+        # ------------- #
+        # Column Select #
+        # ------------- #
         self.col_avail_lbl = tk.Label(self.output_frame,
                                       text='Columns Available')
         self.col_avail_lbl.grid(row=0, column=0, sticky='esw', padx=3, pady=3)
 
         self.col_slct_var = tk.StringVar()
+        # Subscribe to construct for columns
         self.data_in.add_sub(self.col_slct_var, 'col')
+        # Scrollbar for column select listbox
         self.col_slct_scroll = tk.Scrollbar(self.output_frame,
                                             orient='vertical')
         self.col_slct_box = tk.Listbox(self.output_frame,
@@ -90,15 +94,23 @@ class InputTab(tk.Frame):
         self.col_slct_scroll.grid(row=1, column=1, sticky='ns')
         self.col_slct_box.grid(row=1, column=0, sticky='nsew', pady=5)
 
-        # Output data
+        # ----------- #
+        # Output data #
+        # ----------- #
         self.col_data_lbl = tk.Label(self.output_frame,
                                      text='Sample Col. Data')
         self.col_data_lbl.grid(row=0, column=2, sticky='esw', padx=3, pady=3)
 
         self.col_data_var = tk.StringVar()
+        # Subscribe to the sample data output from constructs
+        self.data_in.add_sub(self.col_data_var, 'sample')
+        # Scrollbar for output listbox
+        self.col_data_scroll = tk.Scrollbar(self.output_frame,
+                                            orient='vertical')
         self.col_data_out = tk.Listbox(self.output_frame,
                                        listvariable=self.col_data_var)
-        self.col_data_out.grid(row=1, column=2, sticky='nsew', padx=3, pady=3)
+        self.col_data_scroll.grid(row=1, column=3, sticky='ns')
+        self.col_data_out.grid(row=1, column=2, sticky='nsew', pady=3)
 
         # Viewing options
         self.show_data_lbl = tk.Label(self.output_frame,
@@ -108,12 +120,16 @@ class InputTab(tk.Frame):
         self.show_data_bx = ttk.Combobox(self.output_frame, justify='center',
                                          state='readonly',
                                          values=['Top', 'Bottom'])
+        # Set default combobox value
+        self.show_data_bx.current(0)
         self.show_data_bx.grid(row=2, column=2, sticky='ew', padx=3, pady=3)
 
         self.num_show_lbl = tk.Label(self.output_frame, text='Number of rows:')
         self.num_show_lbl.grid(row=3, column=0, sticky='nes', padx=3, pady=3)
 
         self.num_show_entry = tk.Entry(self.output_frame)
+        # Set default value for number of rows
+        self.num_show_entry.insert(0, 10)
         self.num_show_entry.grid(row=3, column=2, sticky='w', padx=3, pady=3)
 
         # Remove Selected
@@ -151,6 +167,8 @@ class InputTab(tk.Frame):
                 mb.showinfo(title='More than 0',
                             message='Please input a number greater than 0',
                             icon='warning')
+                return None
+
         except Exception as e:
             msg = 'Please use digits in "Number of Rows".'
             mb.showinfo(title='Missing/Erroneous Value', message=msg,
@@ -166,7 +184,8 @@ class InputTab(tk.Frame):
         # 'unselected' the function is called again.  This causes errors which
         # are now handled via this try/except block.
         try:
-            col = selection.get(selection.curselection())
+            # col = selection.get(selection.curselection())
+            col = selection.index(selection.curselection())
         except Exception as e:
             # A return used to exit the function without going further
             return None
@@ -180,9 +199,10 @@ class InputTab(tk.Frame):
 
         direction = self.show_data_bx.get()
         # Ensure that a direction was selected
-        if direction != 'Top' or direction != 'Bottom':
+        if direction != 'Top' and direction != 'Bottom':
             mb.showinfo(title='Select Direction',
                         message='Please make a direction selection.',
                         icon='warning')
-        print('Number of rows: {}\nColumn: {}\nDirection: {}\
-              '.format(rows, col, direction))
+
+        # Pass the information off to the constructs script to be acted upon
+        self.data_in.set_sample_data(col, rows, direction)
