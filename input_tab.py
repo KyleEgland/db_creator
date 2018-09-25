@@ -7,6 +7,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import filedialog as file
+from tkinter import messagebox as mb
 import os
 
 
@@ -137,18 +138,51 @@ class InputTab(tk.Frame):
         self.data_in.set_file_name(import_file)
 
     def num_val(self):
+        # Function used to validate the contents of the entyr widget for the
+        # number of sample rows desired
         try:
+            # This ensures that the contents of the widget are a number
             checker = int(self.num_show_entry.get())
+            # There is no point in returning 0 rows of sample data so we'll
+            # catch it in case the user made a mistake
+            if checker > 0:
+                return checker
+            else:
+                mb.showinfo(title='More than 0',
+                            message='Please input a number greater than 0',
+                            icon='warning')
         except Exception as e:
-            tk.messagebox.ok(message='Please use digits in "Number of Rows".')
-
-        return checker
+            msg = 'Please use digits in "Number of Rows".'
+            mb.showinfo(title='Missing/Erroneous Value', message=msg,
+                        icon='warning',)
+            return None
 
     def get_sample(self, evt):
+        # The binding passes the widget to the function, this is handled below
+        # by accepting it as a variable to be worked with
         selection = evt.widget
+
+        # This try/except is being used because when the list box item is
+        # 'unselected' the function is called again.  This causes errors which
+        # are now handled via this try/except block.
+        try:
+            col = selection.get(selection.curselection())
+        except Exception as e:
+            # A return used to exit the function without going further
+            return None
+
+        # Call the validation created previously to ensure that the appropriate
+        # information is being processed
         rows = self.num_val()
-        col = selection.curselection()[0]
+        # Exit the function if there was an issue with the validation
+        if rows is None:
+            return None
+
         direction = self.show_data_bx.get()
-        if col is not None:
-            print('Number of rows: {}\nColumn: {}\nDirection: {}\
+        # Ensure that a direction was selected
+        if direction != 'Top' or direction != 'Bottom':
+            mb.showinfo(title='Select Direction',
+                        message='Please make a direction selection.',
+                        icon='warning')
+        print('Number of rows: {}\nColumn: {}\nDirection: {}\
               '.format(rows, col, direction))
