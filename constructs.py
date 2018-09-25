@@ -127,6 +127,9 @@ class InputData():
 
         self.update_subs(self._sample_subs, self._sample_data)
 
+    def drop_row(self, col, row_val):
+        self._data_frame = self._data_frame[self._data_frame[col] != row_val]
+
     def add_sub(self, sub, sub_list):
         self._subs_dict[sub_list].append(sub)
         logger.debug('Added "{}" to "{}" subscriber list'.format(sub,

@@ -88,11 +88,16 @@ class InputTab(tk.Frame):
                                             orient='vertical')
         self.col_slct_box = tk.Listbox(self.output_frame,
                                        listvariable=self.col_slct_var,
-                                       yscrollcommand=self.col_slct_scroll.set)
+                                       yscrollcommand=self.col_slct_scroll.set,
+                                       exportselection=False)
         self.col_slct_scroll.config(command=self.col_slct_box.yview)
         self.col_slct_box.bind('<<ListboxSelect>>', self.get_sample)
         self.col_slct_scroll.grid(row=1, column=1, sticky='ns')
         self.col_slct_box.grid(row=1, column=0, sticky='nsew', pady=5)
+        # Creating a variable to contain the last selected item from the column
+        # box so that it may be used elsewhere when the box loses focus (I.e. a
+        # sample row is selected from the output box)
+        # self.last_col = ''
 
         # ----------- #
         # Output data #
@@ -108,7 +113,10 @@ class InputTab(tk.Frame):
         self.col_data_scroll = tk.Scrollbar(self.output_frame,
                                             orient='vertical')
         self.col_data_out = tk.Listbox(self.output_frame,
-                                       listvariable=self.col_data_var)
+                                       listvariable=self.col_data_var,
+                                       yscrollcommand=self.col_data_scroll.set,
+                                       exportselection=False)
+        self.col_data_scroll.config(command=self.col_data_out.yview)
         self.col_data_scroll.grid(row=1, column=3, sticky='ns')
         self.col_data_out.grid(row=1, column=2, sticky='nsew', pady=3)
 
@@ -138,7 +146,8 @@ class InputTab(tk.Frame):
         self.rmv_col_btn.grid(row=4, column=0, sticky='ew', padx=3, pady=3)
 
         self.rmv_row_btn = ttk.Button(self.output_frame,
-                                      text='Remove selected row')
+                                      text='Remove selected row',
+                                      command=self.remove_row)
         self.rmv_row_btn.grid(row=4, column=2, sticky='ew', padx=3, pady=3)
 
     # ------------- #
@@ -151,7 +160,10 @@ class InputTab(tk.Frame):
                                        title='Select Data File',
                                        filetype=(('CSV File', ('.csv')),
                                                  ('All Files', '*.*')))
-        self.data_in.set_file_name(import_file)
+        if import_file is None:
+            return None
+        else:
+            self.data_in.set_file_name(import_file)
 
     def num_val(self):
         # Function used to validate the contents of the entyr widget for the
@@ -184,7 +196,7 @@ class InputTab(tk.Frame):
         # 'unselected' the function is called again.  This causes errors which
         # are now handled via this try/except block.
         try:
-            # col = selection.get(selection.curselection())
+            # self.last_col = selection.get(selection.curselection())
             col = selection.index(selection.curselection())
         except Exception as e:
             # A return used to exit the function without going further
@@ -206,3 +218,25 @@ class InputTab(tk.Frame):
 
         # Pass the information off to the constructs script to be acted upon
         self.data_in.set_sample_data(col, rows, direction)
+
+    def requery(self):
+        col = self.col_slct_box.index(self.col_slct_box.curselection())
+        rows = self.num_val()
+        direction = self.show_data_bx.get()
+        self.data_in.set_sample_data(col, rows, direction)
+
+    def remove_row(self):
+        col = self.col_slct_box.get(self.col_slct_box.curselection())
+
+        # Get the name of the value in the undesired column
+        try:
+            row_val = self.col_data_out.get(self.col_data_out.curselection())
+        except Exception as e:
+            # TODO: logging statement needed
+            return None
+
+        self.data_in.drop_row(col, row_val)
+        self.requery()
+
+    def remove_column(self):
+        pass
