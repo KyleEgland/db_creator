@@ -120,16 +120,21 @@ class InputTab(tk.Frame):
         self.col_data_scroll.grid(row=1, column=3, sticky='ns')
         self.col_data_out.grid(row=1, column=2, sticky='nsew', pady=3)
 
-        # Viewing options
+        # --------------- #
+        # Viewing options #
+        # --------------- #
         self.show_data_lbl = tk.Label(self.output_frame,
                                       text='Show data from:')
         self.show_data_lbl.grid(row=2, column=0, sticky='nes', padx=3, pady=3)
 
+        self.dir_var = tk.StringVar()
         self.show_data_bx = ttk.Combobox(self.output_frame, justify='center',
                                          state='readonly',
+                                         textvariable=self.dir_var,
                                          values=['Top', 'Bottom'])
         # Set default combobox value
         self.show_data_bx.current(0)
+        self.dir_var.trace('w', self.requery)
         self.show_data_bx.grid(row=2, column=2, sticky='ew', padx=3, pady=3)
 
         self.num_show_lbl = tk.Label(self.output_frame, text='Number of rows:')
