@@ -9,6 +9,7 @@
 # sys = used here to exit application before run - see Logger Setup
 import tkinter as tk
 import tkinter.ttk as ttk
+from tkinter import messagebox as mb
 import logging
 import os
 import sys
@@ -101,6 +102,16 @@ class MyApp(tk.Tk):
         self.notebook.add(input_tab, text='Import Data')
         self.notebook.add(mapper_tab, text='DB Mapper Config')
         self.notebook.add(parser_tab, text='Parser Config')
+
+        # The following line will handle window closing events (I.e. user
+        # selecting the 'x' to close the window)
+        self.protocol('WM_DELETE_WINDOW', self.on_closing)
+
+    def on_closing(self):
+        # This function is a place holder for future use
+        if mb.askokcancel('Quit', 'Do you want to quit?'):
+            print('Bye now!')
+            self.destroy()
 
 
 app = MyApp()
