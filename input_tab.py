@@ -147,7 +147,8 @@ class InputTab(tk.Frame):
 
         # Remove Selected
         self.rmv_col_btn = ttk.Button(self.output_frame,
-                                      text='Remove selected column')
+                                      text='Remove selected column',
+                                      command=self.remove_column)
         self.rmv_col_btn.grid(row=4, column=0, sticky='ew', padx=3, pady=3)
 
         self.rmv_row_btn = ttk.Button(self.output_frame,
@@ -224,14 +225,24 @@ class InputTab(tk.Frame):
         # Pass the information off to the constructs script to be acted upon
         self.data_in.set_sample_data(col, rows, direction)
 
-    def requery(self):
-        col = self.col_slct_box.index(self.col_slct_box.curselection())
+    def requery(self, *args):
+        try:
+            col = self.col_slct_box.index(self.col_slct_box.curselection())
+        except Exception as e:
+            # TODO: Enter logging line
+            return None
         rows = self.num_val()
         direction = self.show_data_bx.get()
         self.data_in.set_sample_data(col, rows, direction)
 
     def remove_row(self):
-        col = self.col_slct_box.get(self.col_slct_box.curselection())
+        # Use try/except to catch errors when button is pressed without data
+        # loaded/selection(s) made
+        try:
+            col = self.col_slct_box.get(self.col_slct_box.curselection())
+        except Exception as e:
+            # TODO: logging statement
+            return None
 
         # Get the name of the value in the undesired column
         try:
@@ -244,4 +255,10 @@ class InputTab(tk.Frame):
         self.requery()
 
     def remove_column(self):
-        pass
+        try:
+            col = self.col_slct_box.get(self.col_slct_box.curselection())
+        except Exception as e:
+            # TODO:  logging statement needed
+            return None
+        self.data_in.drop_col(col)
+        self.requery()

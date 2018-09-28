@@ -130,6 +130,10 @@ class InputData():
     def drop_row(self, col, row_val):
         self._data_frame = self._data_frame[self._data_frame[col] != row_val]
 
+    def drop_col(self, col):
+        self._data_frame = self._data_frame.drop(columns=[col])
+        self.set_col_names()
+
     def add_sub(self, sub, sub_list):
         self._subs_dict[sub_list].append(sub)
         logger.debug('Added "{}" to "{}" subscriber list'.format(sub,
