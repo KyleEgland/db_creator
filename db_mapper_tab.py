@@ -10,7 +10,11 @@ import tkinter.ttk as ttk
 
 class MapperTab(tk.Frame):
     # Initialization function
-    def __init__(self, parent):
+    def __init__(self, parent, data_construct):
+        # Set a variable for the instance of the data construct imported in the
+        # main application file
+        self.data_in = data_construct
+
         tk.Frame.__init__(self, parent)
         # The "rowconfigure" and "columnconfigure"
         tk.Grid.rowconfigure(self, 0, weight=0)
@@ -95,7 +99,9 @@ class MapperTab(tk.Frame):
         tk.Grid.rowconfigure(self.mapper_options_frame, 1, weight=1)
 
         tk.Grid.columnconfigure(self.mapper_options_frame, 0, weight=1)
-        tk.Grid.columnconfigure(self.mapper_options_frame, 1, weight=1)
+        tk.Grid.columnconfigure(self.mapper_options_frame, 1, weight=0)
+        tk.Grid.columnconfigure(self.mapper_options_frame, 2, weight=1)
+        tk.Grid.columnconfigure(self.mapper_options_frame, 3, weight=0)
 
         # Columns Available Widgets
         self.col_avail_lbl = tk.Label(self.mapper_options_frame,
@@ -103,18 +109,33 @@ class MapperTab(tk.Frame):
         self.col_avail_lbl.grid(row=0, column=0, sticky='sew', padx=3, pady=3)
 
         self.col_avail_var = tk.StringVar()
+        # Subscribe to construct for columns
+        self.data_in.add_sub(self.col_avail_var, 'col')
         self.col_avail_box = tk.Listbox(self.mapper_options_frame,
-                                        listvariable=self.col_avail_var)
-        self.col_avail_box.grid(row=1, column=0, sticky='nsew', padx=3, pady=3)
+                                        listvariable=self.col_avail_var,
+                                        exportselection=False)
+        # Scroll bar for available columns
+        self.col_avail_scroll = tk.Scrollbar(self.mapper_options_frame,
+                                             orient='vertical',
+                                             command=self.col_avail_box.yview)
+        self.col_avail_box['yscrollcommand'] = self.col_avail_scroll.set
+        self.col_avail_scroll.grid(row=1, column=1, sticky='ns')
+        self.col_avail_box.grid(row=1, column=0, sticky='nsew', pady=3)
 
         # Fields Available Widgets
         self.field_avail_lbl = tk.Label(self.mapper_options_frame,
                                         text='Fields Available')
-        self.field_avail_lbl.grid(row=0, column=1, sticky='sew', padx=3,
+        self.field_avail_lbl.grid(row=0, column=2, sticky='sew', padx=(3, 0),
                                   pady=3)
 
         self.field_avail_var = tk.StringVar()
         self.field_avail_box = tk.Listbox(self.mapper_options_frame,
-                                          listvariable=self.field_avail_var)
-        self.field_avail_box.grid(row=1, column=1, sticky='nsew', padx=3,
-                                  pady=3)
+                                          listvariable=self.field_avail_var,
+                                          exportselection=False)
+        # Scroll bar for fields available listbox
+        self.field_avail_scroll = tk.Scrollbar(self.mapper_options_frame,
+                                               orient='vertical')
+        self.field_avail_scroll.config(command=self.field_avail_box.yview)
+        self.field_avail_box['yscrollcommand'] = self.field_avail_scroll.set
+        self.field_avail_scroll.grid(row=1, column=3, sticky='ns')
+        self.field_avail_box.grid(row=1, column=2, sticky='nsew', pady=3)
