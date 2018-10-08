@@ -141,6 +141,8 @@ class InputTab(tk.Frame):
         self.num_show_lbl.grid(row=3, column=0, sticky='nes', padx=3, pady=3)
 
         self.num_show_entry = tk.Entry(self.output_frame)
+        # Bind the enter key to a function for the box to re-query the data
+        self.num_show_entry.bind('<Return>', self.requery)
         # Set default value for number of rows
         self.num_show_entry.insert(0, 10)
         self.num_show_entry.grid(row=3, column=2, sticky='w', padx=3, pady=3)
@@ -164,7 +166,7 @@ class InputTab(tk.Frame):
         home = os.path.expanduser('~')
         import_file = file.askopenfile(initialdir=home,
                                        title='Select Data File',
-                                       filetype=(('CSV File', ('.csv')),
+                                       filetype=(('CSV File', '.csv'),
                                                  ('All Files', '*.*')))
         if import_file is None:
             return None
