@@ -5,6 +5,7 @@ import pandas as pd
 import os
 import sys
 import logging
+import json
 
 
 # ------------ #
@@ -142,3 +143,43 @@ class InputData():
     def update_subs(self, subs_list, var):
         for sub in subs_list:
             sub.set(var)
+
+
+class DbHandler():
+    # Database creation (local only), connection, and data throughput.
+    def __init__(self, *args, **kwargs):
+        pass
+
+
+class SettingsHandler():
+    def __init__(self, *args, **kwargs):
+        self._settings_file = self.settings_file()
+
+        self._json_obj = self.get_settings()
+
+    def settings_file(self):
+        var = os.path.join(os.getcwd(), 'AppSettings', 'settings.json')
+        if os.path.isfile(var):
+            return var
+        else:
+            return None
+
+    def get_settings(self):
+        with open(self._settings_file) as f:
+            data = json.load(f)
+        f.close()
+        return data
+
+    def get_file(self, needed):
+        # This function is desgined to return files or directories (I.e. the
+        # input directory, map file, etc.)
+        file = self._json_obj[needed]
+        return file
+
+    def get_db(self, local=False):
+        if local is True:
+            return self._json_obj['local_db']['path']
+        else:
+            return (self._json_obj['remote_db']['location'],
+                    self._json_obj['remote_db']['user_name'],
+                    self._json_obj['remote_db']['user_name'])
