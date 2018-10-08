@@ -94,7 +94,7 @@ class MyApp(tk.Tk):
         # Instantiate Notebook pages, note that the order here determines load
         # order - this can be important depending on desired effect(s)
         input_tab = InputTab(self.notebook, self.info)
-        mapper_tab = MapperTab(self.notebook)
+        mapper_tab = MapperTab(self.notebook, self.info)
         parser_tab = ParserTab(self.notebook)
 
         # Add the pages to the Notebook; this order determines appearnce on
