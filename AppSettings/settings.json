@@ -1,0 +1,14 @@
+{
+    "input_dir": "~",
+    "local_db": {
+        "path": null
+    },
+    "remote_db": {
+        "location": null,
+        "user_name": null,
+        "password": null
+    },
+    "map_file": null,
+    "parser_file": null,
+    "outputs": ["Pareto"]
+}
