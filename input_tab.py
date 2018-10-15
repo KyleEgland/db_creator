@@ -13,10 +13,11 @@ import os
 
 class InputTab(tk.Frame):
     # Initialization function
-    def __init__(self, parent, data_construct):
-        # Set a variable for the instance of the data construct imported in the
-        # main application file
-        self.data_in = data_construct
+    def __init__(self, parent, data_input, settings):
+        # Instantiate a local variable for using the input constructor
+        self.data_in = data_input
+        # Instantiate a variable for using the settings constructor
+        self.settings = settings
 
         tk.Frame.__init__(self, parent)
         # The "rowconfigure" and "columnconfigure"
@@ -163,7 +164,7 @@ class InputTab(tk.Frame):
     # ------------- #
     def input_data(self):
         # Function to open file dialog to select input file
-        home = os.path.expanduser('~')
+        home = os.path.expanduser(self.settings.get_setting('input_dir'))
         import_file = file.askopenfile(initialdir=home,
                                        title='Select Data File',
                                        filetype=(('CSV File', '.csv'),
