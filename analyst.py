@@ -88,12 +88,15 @@ class MyApp(tk.Tk):
         self.notebook.pack(fill='both', expand=True)
 
         # Create the constructs that will pass data between all necessary parts
-        # of the program
+        # of the program.
         self.info = cts.InputData()
+        self.settings = cts.SettingsHandler()
+        # Check the settings to ensure the files exist/can be parsed
+        self.settings_check()
 
         # Instantiate Notebook pages, note that the order here determines load
         # order - this can be important depending on desired effect(s)
-        input_tab = InputTab(self.notebook, self.info)
+        input_tab = InputTab(self.notebook, self.info, self.settings)
         mapper_tab = MapperTab(self.notebook, self.info)
         parser_tab = ParserTab(self.notebook)
 
@@ -104,14 +107,31 @@ class MyApp(tk.Tk):
         self.notebook.add(parser_tab, text='Parser Config')
 
         # The following line will handle window closing events (I.e. user
-        # selecting the 'x' to close the window)
-        self.protocol('WM_DELETE_WINDOW', self.on_closing)
+        # # selecting the 'x' to close the window)
+        # self.protocol('WM_DELETE_WINDOW',
+        #               self.on_closing('Quit',
+        #                               'Are you sure you want to quit?'))
 
-    def on_closing(self):
-        # This function is a place holder for future use
-        if mb.askokcancel('Quit', 'Do you want to quit?'):
-            print('Bye now!')
-            self.destroy()
+    # def on_closing(self, win_title, msg):
+    #     # This function is a place holder for future use
+    #     if mb.askokcancel(win_title, msg):
+    #         print('Bye now!')
+    #         self.destroy()
+
+    def settings_check(self):
+        # Function to run the settings check function in the SettingsHandler
+        # class
+        check = self.settings.init_check()
+        if check is None:
+            return
+        else:
+            message = 'An error occurred with:'
+            detail = ''
+            for err in check:
+                detail += '\n{}'.format(err)
+            mb.showinfo(message=message, detail=detail, title='Settings Error',
+                        icon='error', parent=self)
+            sys.exit()
 
 
 app = MyApp()
