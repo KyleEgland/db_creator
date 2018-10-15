@@ -8,7 +8,7 @@
         "user_name": null,
         "password": null
     },
-    "map_file": null,
-    "parser_file": null,
+    "map_file": "default_mapper.json",
+    "parser_file": "default_parser.json",
     "outputs": ["Pareto"]
 }
