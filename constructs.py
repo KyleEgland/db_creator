@@ -155,26 +155,47 @@ class SettingsHandler():
     def __init__(self, *args, **kwargs):
         self._settings_file = self.settings_file()
 
-        self._json_obj = self.get_settings()
+        self._json_obj = self.load_settings()
+
+        self._mapper_file = self.get_attr(self._json_obj, 'map_file')
+
+        self._parser_file = self.get_attr(self._json_obj, 'parser_file')
+
+        self._outputs = self.get_attr(self._json_obj, 'outputs')
 
     def settings_file(self):
+        # Load the settings file; points to the rest of the settings files.
         var = os.path.join(os.getcwd(), 'AppSettings', 'settings.json')
         if os.path.isfile(var):
             return var
         else:
+            logger.critical('Error finding settings file - does not exist')
             return None
 
-    def get_settings(self):
-        with open(self._settings_file) as f:
-            data = json.load(f)
-        f.close()
-        return data
+    def load_settings(self):
+        # Function for loading a json file into memory
+        try:
+            with open(self._settings_file) as f:
+                data = json.load(f)
+            f.close()
+            return data
+        except Exception as e:
+            logger.error('JSON file opening error: {}'.format(e))
+            return None
 
-    def get_file(self, needed):
-        # This function is desgined to return files or directories (I.e. the
-        # input directory, map file, etc.)
-        file = self._json_obj[needed]
-        return file
+    def get_attr(self, obj, needed):
+        # Function to get an attribute from a json object - for use within this
+        # class; not intended for use when imported
+        try:
+            attr = obj[needed]
+            return attr
+        except Exception as e:
+            logger.error('JSON read error: {}'.format(e))
+            return None
+
+    def get_setting(self, setting):
+        var = str(self._json_obj[setting])
+        return var
 
     def get_db(self, local=False):
         if local is True:
@@ -183,3 +204,26 @@ class SettingsHandler():
             return (self._json_obj['remote_db']['location'],
                     self._json_obj['remote_db']['user_name'],
                     self._json_obj['remote_db']['user_name'])
+
+    def init_check(self):
+        # Function for checking the initial settings load on program startup
+        # Create a list of the class attributes that should be correctly
+        # populated on initialization.
+        settings = {'Settings file': self._json_obj,
+                    'Mapper file': self._mapper_file,
+                    'Parser file': self._parser_file,
+                    'Outputs option': self._outputs}
+
+        # List containing attributes with None
+        err = []
+
+        for key in settings.keys():
+            if settings[key] is None:
+                err.append(key)
+            else:
+                continue
+
+        if len(err) == 0:
+            return None
+        else:
+            return err
